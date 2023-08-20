@@ -5,7 +5,7 @@ session_start();
 $db_name='HillDownGameStore_db';
 $add_on_table='games_table';
 
-if (isset($_SESSION['ttk']) || $_SESSION['ttk']>0) {
+if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
   $sqlConnect=new mysqli('localhost', 'archer', 'archer', $db_name);
   if (mysqli_connect_errno()) {
       printf("Errore di connessione: %s\n", mysqli_connect_error());
@@ -42,8 +42,8 @@ if (isset($_SESSION['ttk']) || $_SESSION['ttk']>0) {
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <title>HillDown Game-Store</title>
-    <link rel="stylesheet" href="StoreHomePage.css" media="screen">
-    <link rel="stylesheet" href="Init_Struct.css" media="screen">
+    <link rel="stylesheet" href="StoreHomePage_.css" media="screen">
+    <link rel="stylesheet" href="Init_Struct_.css" media="screen">
   </head>
   <body>
     <div class="flexContainer">

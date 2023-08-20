@@ -9,6 +9,11 @@ transform: scale(0.9);
 border-radius: 10px;
 }
 
+.table{
+  margin-bottom: 6%;
+}
+
+
 
 .table img{
 height: 100%;

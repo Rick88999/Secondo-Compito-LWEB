@@ -5,10 +5,19 @@
 
 
 body{
+  height: 99vh;
   background: rgb(40,38,38);
   background: linear-gradient(40deg, rgba(40,38,38,1) 11%, rgba(143,32,32,1) 50%, rgba(28,26,26,1) 87%);
+  background-repeat: no-repeat;
+  background-size: cover;
 
 }
+
+#bodyGameList{
+  overflow: hidden;
+  
+}
+
 .flexContainer{
   display: flex;
   flex-direction: column;
@@ -50,4 +59,16 @@ body{
   font-family: megatrans;
   font-size: 18px;
   transition: background-color 0.3s, transform 0.3s, filter 0.3s;
-  }
+}
+
+.navBarStruct input:hover {
+background-color: #0929C7;
+border-radius: 10px;
+transform: scale(1.1);
+filter: brightness(1.2);
+}
+
+.navBarStruct input:active {
+transform: scale(0.9);
+border-radius: 10px;
+}

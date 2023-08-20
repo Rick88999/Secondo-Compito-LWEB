@@ -126,20 +126,50 @@ if(!($res=mysqli_query($sqlConnect, $query))){
   $error.="ERROR7: INSERT OLD USERS INFO ERROR!";
 }
 
-$query="INSERT INTO $add_on_table (titolo, img, prezzo, versione, descrizione) VALUES (\"Gun Bun\", \"bun.png\", \"12.50\", \"1.2554\", \"Bun è un piccolo coniglio nella terra di Fauna, aiutalo a salvare i suoi amici. Questo platform game con elementi GDR, è stato creato dai creatori di Terraria\"); ";
+$query="INSERT INTO $add_on_table (titolo, img, prezzo, versione, descrizione) VALUES (\"Gun Bun\", \"bun.png\", \"19.99\", \"1.2554\", \"Bun è un piccolo coniglio nella terra di Fauna, aiutalo a salvare i suoi amici. Questo platform game con elementi GDR, è stato creato dai creatori di Terraria\"); ";
 if(!($res=mysqli_query($sqlConnect, $query))){
   $error.="ERROR7: INSERT GAME ERROR!";
 }
 
-$query="INSERT INTO $add_on_table (titolo, img, prezzo, versione, descrizione) VALUES (\"Fire jet Storm 2\", \"jet.png\", \"49.90\", \"2.0\", \"\Vola libero su ne cielo: Fire jet torna con il secondo capilo! Ispirato a 1945 I&II, il secondo capilo della saga offre una nuova modalità multiplayer\"); ";
+$query="INSERT INTO $add_on_table (titolo, img, prezzo, versione, descrizione) VALUES (\"Fire jet Storm 2\", \"jet.png\", \"49.99\", \"2.0\", \"\Vola libero su ne cielo: Fire jet torna con il secondo capilo! Ispirato a 1945 I&II, il secondo capilo della saga offre una nuova modalità multiplayer\"); ";
 if(!($res=mysqli_query($sqlConnect, $query))){
   $error.="ERROR7: INSERT GAME ERROR!";
 }
 
-$query="INSERT INTO $add_on_table (titolo, img, prezzo, versione, descrizione) VALUES (\"Sunlight3: the moon\", \"sun.png\",\"35.50\", \"3.6\", \"Sunlight giunge al suo ultimo capitolo. L'avventura di John Starminer giunge alla conclusione in questo ultimo emozionante capitolo ambientato sulla luna. Valutato da IGN come: 'Il miglior open world del 2023'\"); ";
+$query="INSERT INTO $add_on_table (titolo, img, prezzo, versione, descrizione) VALUES (\"Sunlight3: the moon\", \"sun.png\",\"34.99\", \"3.6\", \"Sunlight giunge al suo ultimo capitolo. L'avventura di John Starminer giunge alla conclusione in questo ultimo emozionante capitolo ambientato sulla luna. Valutato da IGN come: 'Il miglior open world del 2023'\"); ";
 if(!($res=mysqli_query($sqlConnect, $query))){
   $error.="ERROR7: INSERT GAME ERROR!";
 }
+
+$query="INSERT INTO $add_on_table (titolo, img, prezzo, versione, descrizione) VALUES (\"DLC(Sunlight3: the moon):Saturn day nights dreams\", \"none\",\"14.99\", \"0.1\", \"none\"); ";
+if(!($res=mysqli_query($sqlConnect, $query))){
+  $error.="ERROR7: INSERT GAME ERROR!";
+}
+
+$query="INSERT INTO $add_on_table (titolo, img, prezzo, versione, descrizione) VALUES (\"DLC(Gun Bun):Racoon\", \"none\",\"4.99\", \"0.1\", \"none\"); ";
+if(!($res=mysqli_query($sqlConnect, $query))){
+  $error.="ERROR7: INSERT GAME ERROR!";
+}
+
+$query="INSERT INTO $add_on_table (titolo, img, prezzo, versione, descrizione) VALUES (\"DLC(Gun Bun):Sparrows\", \"none\",\"4.99\", \"0.1\", \"none\"); ";
+if(!($res=mysqli_query($sqlConnect, $query))){
+  $error.="ERROR7: INSERT GAME ERROR!";
+}
+
+$query="INSERT INTO $add_on_table (titolo, img, prezzo, versione, descrizione) VALUES (\"DLC(Fire jet Storm 2):Delta's protocol\", \"none\",\"19.99\", \"0.1\", \"none\"); ";
+if(!($res=mysqli_query($sqlConnect, $query))){
+  $error.="ERROR7: INSERT GAME ERROR!";
+}
+
+$query="INSERT INTO $users_game_list (id_user, id_game) VALUES (\"1\", \"1\"); ";
+if(!($res=mysqli_query($sqlConnect, $query))){
+  $error.="ERROR7: INSERT GAME ERROR!";
+}
+$query="INSERT INTO $users_game_list (id_user, id_game) VALUES (\"1\", \"5\"); ";
+if(!($res=mysqli_query($sqlConnect, $query))){
+  $error.="ERROR7: INSERT GAME ERROR!";
+}
+
 
  ?>
 
