@@ -88,7 +88,9 @@ if(!($res=mysqli_query($sqlConnect, $query))){
 $query="CREATE TABLE IF not exists $active_cart_table(
   id_user INT NOT NULL,
   id_prodotto INT NOT NULL,
-  costo FLOAT,
+  titolo VARCHAR(40),
+  prezzo FLOAT,
+  sec INT,
   PRIMARY KEY(id_user, id_prodotto)
 )";
 
@@ -168,6 +170,35 @@ if(!($res=mysqli_query($sqlConnect, $query))){
 $query="INSERT INTO $users_game_list (id_user, id_game) VALUES (\"1\", \"5\"); ";
 if(!($res=mysqli_query($sqlConnect, $query))){
   $error.="ERROR7: INSERT GAME ERROR!";
+}
+
+$query="CREATE TRIGGER after_insert_cart
+AFTER INSERT ON active_cart
+FOR EACH ROW
+BEGIN
+    IF NEW.sec IS NULL THEN
+        UPDATE active_cart SET sec = '200' WHERE id_user = NEW.id_user;
+    END IF;
+END;
+
+";
+
+if(!($res=mysqli_query($sqlConnect, $query))){
+  $error.="ERROR8: INSERT TRIGGER ERROR!";
+}
+
+$query="CREATE TRIGGER before_insert_cart
+BEFORE INSERT ON active_cart
+FOR EACH ROW
+BEGIN
+    IF active_cart.time IS NOT NULL THEN
+        UPDATE active_cart SET sec = sec-1;
+    END IF;
+END;
+";
+
+if(!($res=mysqli_query($sqlConnect, $query))){
+  $error.="ERROR8: INSERT TRIGGER ERROR!";
 }
 
 

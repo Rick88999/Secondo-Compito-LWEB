@@ -30,7 +30,7 @@ if(isset($_POST['send'])){
           $_SESSION['email']=$row['email'];
           $_SESSION['nickname']=$row['nickname'];
           $_SESSION['role']=$row['role'];
-          $_SESSION['ttk']=1000;
+          $_SESSION['ttk']=100;
           if($_SESSION['role']==1){
             header('Location: AdminPage.php');
           }

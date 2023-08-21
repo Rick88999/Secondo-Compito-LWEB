@@ -5,7 +5,7 @@
 
 
 body{
-  height: 99vh;
+  height: 120vh;
   background: rgb(40,38,38);
   background: linear-gradient(40deg, rgba(40,38,38,1) 11%, rgba(143,32,32,1) 50%, rgba(28,26,26,1) 87%);
   background-repeat: no-repeat;
@@ -15,7 +15,7 @@ body{
 
 #bodyGameList{
   overflow: hidden;
-  
+
 }
 
 .flexContainer{
@@ -23,7 +23,6 @@ body{
   flex-direction: column;
   height: 100%;
   width: 100%;
-  justify-content: space-between;
 
 }
 

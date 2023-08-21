@@ -30,7 +30,7 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
       }
 
       if($flag==0 && !(empty($_POST['games_into_cart']))){
-        $_SESSION['ids_to_cart']=$ids_to_cart;
+        $_SESSION['ids_to_cart']=$_POST['games_into_cart'];
         $sqlConnect->close();
         header('Location: cartPage.php');
       }
@@ -63,7 +63,7 @@ $_SESSION['ttk']--;
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <title>HillDown Game-Store</title>
-    <link rel="stylesheet" href="Init_Struct_.css" media="screen">
+    <link rel="stylesheet" href="Init_Struct__.css" media="screen">
     <link rel="stylesheet" href="gameList.css" media="screen">
   </head>
   <body id="bodyGameList">
