@@ -1,6 +1,8 @@
 <?php
 $db_name='HillDownGameStore_db';
 $users_table='user_table';
+$string="";
+
 
 $sqlConnect=new mysqli('localhost', 'archer', 'archer', $db_name);
 if (mysqli_connect_errno()) {
@@ -12,50 +14,41 @@ if(isset($_POST['send'])){
   if ($_POST['send']=='Login') {
     if(!(empty($_POST['email'])) && !(empty($_POST['password']))){
       if(!(preg_match("/^.*@.*/", $_POST['email']))){
-        echo "<p>Inserire l'email non un nickname</p>";
+        $string.="<p>Inserire l'email non un nickname</p>";
       }
       else{
-        $query="SELECT * FROM `user_table` WHERE email=\"{$_POST['email']}\" AND password=\"{$_POST['password']}\";";
+        $query="SELECT * FROM `{$users_table}` WHERE email=\"{$_POST['email']}\" AND password=\"{$_POST['password']}\";";
         $return=mysqli_query($sqlConnect, $query);
         $row=mysqli_fetch_array($return);
 
         if($row){
-          if($row['kick_check']!=0){
-            echo "<p>Mi dispiace {$row['nickname']}, kick di ancora {$row['kick_check']}s</p>";
-            exit();
-          }
           session_name('HillDownService');
           session_start();
           $_SESSION['id']=$row['id'];
           $_SESSION['email']=$row['email'];
           $_SESSION['nickname']=$row['nickname'];
-          $_SESSION['role']=$row['role'];
           $_SESSION['ttk']=100;
-          if($_SESSION['role']==1){
-            header('Location: AdminPage.php');
-          }
-          else{
+
             header('Location: StoreHomePage.php');
           }
-        }
         else{
-          echo "<p>Login fallito: email o password errata</p>";
+          $string.="<p>Login fallito: email o password errata</p>";
+
         }
       }
     }
     else{
-      echo "<p>Dati mancanti i uno o entrambi i campi email e/o password</p>";
+      $string.="<p>Dati mancanti i uno o entrambi i campi email e/o password</p>";
     }
   }
   elseif ($_POST['send']=='Sign In') {
     header('Location: signIn.php');
   }
- else{
-    echo "<p>Login fallito: email o password errata</p>";
-  }
-}
 
   $sqlConnect->close();
+}
+
+
 
  ?>
 
@@ -66,17 +59,21 @@ if(isset($_POST['send'])){
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <title>HillDown Game Store</title>
+    <link rel="stylesheet" href="Init_Struct__.css" media="screen">
+    <link rel="stylesheet" href="login_.css" media="screen">
   </head>
   <body>
-    <div class="">
-      <form class="" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
-
+    <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+    <div class="flexContainer">
+      <div class="flexLogin">
         <div class="">
+          <img src="logo3.png" alt="">
+        </div>
+        <div class="login_item">
+          <?php if($string!="") echo $string; ?>
           <label for="email">Email:</label>
           <input type="text" name="email" value="">
-        </div>
 
-        <div class="">
           <label for="password">Password:</label>
           <input type="password" name="password" value="">
         </div>
@@ -87,10 +84,10 @@ if(isset($_POST['send'])){
         </div>
 
 
-      </form>
+      </div>
 
     </div>
-
+  </form>
 
   </body>
 </html>

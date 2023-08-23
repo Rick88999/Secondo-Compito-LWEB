@@ -25,12 +25,22 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
   if (isset($_GET['logout'])) {
     unset($_SESSION);
     session_destroy();
+    $sqlConnect->close();
     header('Location: login.php');
   }
 
    $sqlConnect->close();
    $_SESSION['ttk']--;
 }
+else {
+  $sqlConnect->close();
+  unset($_SESSION);
+  session_destroy();
+  header('Location: login.php');
+
+$sqlConnect->close();
+}
+$_SESSION['ttk']--;
 
 
  ?>

@@ -40,6 +40,7 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
     elseif ($_POST['send']=='logout') {
       unset($_SESSION);
       session_destroy();
+      $sqlConnect->close();
       header('Location: login.php');
     }
   }
@@ -108,13 +109,15 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
   else{
     $_SESSION['row1_cache']=$row1;
   }
-
-
-
-
+  $sqlConnect->close();
+}
+else {
+  $sqlConnect->close();
+  unset($_SESSION);
+  session_destroy();
+  header('Location: login.php');
 }
 
-$sqlConnect->close();
 $_SESSION['ttk']--;
  ?>
 
@@ -126,7 +129,7 @@ $_SESSION['ttk']--;
   <head>
     <title>HillDown Game-Store</title>
     <link rel="stylesheet" href="Init_Struct__.css" media="screen">
-    <link rel="stylesheet" href="cartPage.css" media="screen">
+    <link rel="stylesheet" href="cartPage_.css" media="screen">
   </head>
   <body>
     <div class="flexContainer">
@@ -149,8 +152,8 @@ $_SESSION['ttk']--;
                 </map>
               </td>
               <td>
-                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get">
-                    <input type="submit" name="logout" value="logout">
+                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+                    <input type="submit" name="send" value="logout">
                 </form>
               </td>
             </tr>

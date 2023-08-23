@@ -35,8 +35,6 @@ $query="CREATE TABLE IF not exists $users_table(
   email VARCHAR(40),
   nickname VARCHAR(40),
   password VARCHAR(60),
-  role INT,
-  kick_check BOOLEAN,
   PRIMARY KEY(id, email),
   UNIQUE(id, email)
 )";
@@ -97,17 +95,17 @@ if(!($res=mysqli_query($sqlConnect, $query))){
   $error.="ERROR5: ACTIVE CART TABLE CREATION ERROR!";
 }
 
-$query="INSERT INTO $users_table (email, nickname, password, role, kick_check) VALUES (\"george@hotmail.com\", \"Giorgio\", \"sasso\", \"0\", \"FALSE\"); ";
+$query="INSERT INTO $users_table (email, nickname, password) VALUES (\"george@hotmail.com\", \"Giorgio\", \"sasso\"); ";
 if(!($res=mysqli_query($sqlConnect, $query))){
   $error.="ERROR6: INSERT OLD USERS ERROR!";
 }
 
-$query="INSERT INTO $users_table (email, nickname, password, role, kick_check) VALUES (\"perro@gmail.com\", \"Pedro\", \"sasso1\", \"1\", \"FALSE\"); ";
+$query="INSERT INTO $users_table (email, nickname, password) VALUES (\"perro@gmail.com\", \"Pedro\", \"sasso1\"); ";
 if(!($res=mysqli_query($sqlConnect, $query))){
   $error.="ERROR6: INSERT OLD USERS ERROR!";
 }
 
-$query="INSERT INTO $users_table (email, nickname, password, role, kick_check) VALUES (\"superBanzinga99@gmail.com\", \"Alex\", \"jojo1\", \"0\", \"FALSE\"); ";
+$query="INSERT INTO $users_table (email, nickname, password) VALUES (\"superBanzinga99@gmail.com\", \"Alex\", \"jojo1\"); ";
 if(!($res=mysqli_query($sqlConnect, $query))){
   $error.="ERROR6: INSERT OLD USERS ERROR!";
 }

@@ -38,6 +38,7 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
     }
     elseif ($_POST['send']=='logout') {
       unset($_SESSION);
+      $sqlConnect->close();
       session_destroy();
       header('Location: login.php');
     }
@@ -51,8 +52,15 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
     $query="SELECT id_prodotto, titolo, prezzo FROM `{$add_on_table}` WHERE titolo LIKE 'DLC({$row1['titolo']})%';";
     $return=mysqli_query($sqlConnect, $query);
   }
+  $sqlConnect->close();
 }
-$sqlConnect->close();
+else {
+  $sqlConnect->close();
+  unset($_SESSION);
+  session_destroy();
+  header('Location: login.php');
+}
+
 $_SESSION['ttk']--;
  ?>
 
@@ -64,7 +72,7 @@ $_SESSION['ttk']--;
   <head>
     <title>HillDown Game-Store</title>
     <link rel="stylesheet" href="Init_Struct__.css" media="screen">
-    <link rel="stylesheet" href="gameList.css" media="screen">
+    <link rel="stylesheet" href="gameList_.css" media="screen">
   </head>
   <body id="bodyGameList">
     <div class="flexContainer">

@@ -9,8 +9,8 @@
 
 .flex_showing_innerbox_imageAndData{
   display: flex;
-  flex-direction: row;
-  height: 80%;
+  flex-direction: column;
+  height: 95%;
   width: 50%;
   border: 2px solid rgba(0, 0, 0, 0.5);
   border-radius: 10px;
@@ -52,7 +52,7 @@
   display: flex;
   margin-top: 4%;
   flex-direction: column-reverse;
-  padding: 10px; 
+  padding: 10px;
 }
 
 #button_cart{
