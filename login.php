@@ -42,7 +42,7 @@ if(isset($_POST['send'])){
     }
   }
   elseif ($_POST['send']=='Sign In') {
-    header('Location: signIn.php');
+    header('Location: SignIn.php');
   }
 
   $sqlConnect->close();
