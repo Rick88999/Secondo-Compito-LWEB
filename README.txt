@@ -13,4 +13,4 @@ che esporrai titoli e i relativi DLC di cui l'utente è in possesso.
 Inoltre il carrello sarà raggiungibile da ogni pagina.
 
 
-Riccardo Tulini: https://github.com/Rick88999/php-project
+Riccardo Tulini: https://github.com/Rick88999/Secondo-Compito-LWEB
