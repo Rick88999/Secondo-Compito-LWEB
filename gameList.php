@@ -1,10 +1,13 @@
 <?php
+/*La pagina di game list serve per visualizzare il gioco in maggior dettavglio. Inoltre è la pgina che permette, se non abbiamo già il gioco o DLC, di acquistarlo.
+Possiamo arrivarci dalla HOME con il pulsante BUY o dalla Libreria con il pulsante SEE*/
 session_name('HillDownService');
 session_start();
 
 $db_name='HillDownGameStore_db';
 $add_on_table='games_table';
 $users_game_list='users_game_list';
+$active_cart_table='active_cart';
 $flag=0;
 
 
@@ -15,22 +18,29 @@ if (mysqli_connect_errno()) {
 }
 
 if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
-  $query="SELECT * FROM `{$users_game_list}` WHERE id_user=\"{$_SESSION['id']}\";";
+  $query="SELECT * FROM `{$users_game_list}` WHERE id_user=\"{$_SESSION['id']}\";"; //Inizio richiedendo tutte le tuple contenenti la corrispondenza id_user | id_game dalla tabella users_game_list
   $return=mysqli_query($sqlConnect, $query);
+  $query="SELECT id_user, id_prodotto FROM `{$active_cart_table}` WHERE id_user=\"{$_SESSION['id']}\";"; //Richiedo tutte le tuple nel carrello attivo
+  $cart_check=mysqli_query($sqlConnect, $query);
 
   if (isset($_POST['send'])) {
 
     if ($_POST['send']=='Al carrello-->') {
-      if (isset($_POST['games_into_cart']) && !(empty($_POST['games_into_cart']))) {
-        while($row0=mysqli_fetch_array($return)){
+      if (isset($_POST['games_into_cart']) && !(empty($_POST['games_into_cart']))) { //Se ho selzionato giochi da acquistare e vado sul pulsante AL Carrello
+        while($row0=mysqli_fetch_array($return)){                       //Verifico se non possiedo già i giochi
           foreach ($_POST['games_into_cart'] as $v) {
             if($row0['id_game']==$v) $flag++;
           }
         }
+        while($row0=mysqli_fetch_array($cart_check)){               //E verifico se non gli ho già messi nel carrello
+          foreach ($_POST['games_into_cart'] as $v) {
+            if($row0['id_prodotto']==$v) $flag++;
+          }
+        }
       }
 
-      if($flag==0 && !(empty($_POST['games_into_cart']))){
-        $_SESSION['ids_to_cart']=$_POST['games_into_cart'];
+      if($flag==0 && !(empty($_POST['games_into_cart']))){ //In caso è tutto ok vado nel carrello per acquistare altrimenti la pagina si aggiornerà con un messaggio
+        $_SESSION['ids_to_cart']=$_POST['games_into_cart'];//che invitera gli utenti a deselezionare il gioco che già hanno acquistato o posto nel carrello attivo
         $sqlConnect->close();
         header('Location: cartPage.php');
       }
@@ -44,15 +54,17 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
     }
   }
 
-
+/*In seguito alla verifica della condizione isset($_POST), il programma inizialmente proseguira con una Query
+che selezionerà tutti i giochi avente l'id passato dalla pagina precedente*/
   $query="SELECT * FROM `{$add_on_table}` WHERE id_prodotto=\"{$_SESSION['id_game']}\";";
   $return=mysqli_query($sqlConnect, $query);
-  $row1=mysqli_fetch_array($return);
+  $row1=mysqli_fetch_array($return);//Qui mettiamo la tupla del titolo in questione
   if($row1){
-    $query="SELECT id_prodotto, titolo, prezzo FROM `{$add_on_table}` WHERE titolo LIKE 'DLC({$row1['titolo']})%';";
-    $return=mysqli_query($sqlConnect, $query);
+    $query="SELECT id_prodotto, titolo, prezzo FROM `{$add_on_table}` WHERE titolo LIKE 'DLC({$row1['titolo']})%';"; //Prendermo inoltre tutte le tuple DLC da poi mostrare come prodotti ricoleggati al main gioco e
+    $return=mysqli_query($sqlConnect, $query);                                                                      //ulteriormente acquistabili(anche separatamente)
   }
   $sqlConnect->close();
+  $_SESSION['ttk']--;
 }
 else {
   $sqlConnect->close();
@@ -61,7 +73,8 @@ else {
   header('Location: login.php');
 }
 
-$_SESSION['ttk']--;
+/*Divido poi nel codice HTML la pagina in due parti: una informativa con tutte le info del gioco principale; una di selezione, dove potremmo condermare in prodotti
+da voler acquistare e proseguire per il carrello*/
  ?>
 
  <?xml version="1.0" encoding="UTF-8"?>
@@ -70,7 +83,7 @@ $_SESSION['ttk']--;
  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <title>HillDown Game-Store</title>
+    <title>DownHill Game Store</title>
     <link rel="stylesheet" href="Init_Struct__.css" media="screen">
     <link rel="stylesheet" href="gameList_.css" media="screen">
   </head>
@@ -141,9 +154,9 @@ $_SESSION['ttk']--;
               $ids_to_cart[]=$row1[0];
               echo "<h3>Seleziona giochi o DLC che vuoi acquistare:</h3>";
               echo "<label>";
-              echo "<input type=\"checkbox\" name=\"games_into_cart[]\" value=\"{$row1['id_prodotto']}\"> {$row1['titolo']} | {$row1['prezzo']}€";
+              echo "<input type=\"checkbox\" name=\"games_into_cart[]\" value=\"{$row1['id_prodotto']}\"> {$row1['titolo']} | {$row1['prezzo']}€"; //Mostro il gioco principale
               echo "</label><br>";
-              while ($row2=mysqli_fetch_array($return)) {
+              while ($row2=mysqli_fetch_array($return)) {                      //Carico anche i vari DLC ancquistbili
                 $ids_to_cart[]=$row2[0];
                 echo "<label>";
                 echo "<input type=\"checkbox\" name=\"games_into_cart[]\" value=\"{$row2['id_prodotto']}\"> {$row2['titolo']} | {$row2['prezzo']}€";
@@ -158,7 +171,7 @@ $_SESSION['ttk']--;
             <div>
               <?php
               if ($flag>0) {
-                echo "<p>Sei già in possesso di uno o più dei contenuti selezionati </p>";
+                echo "<p>Sei già in possesso di uno o più dei contenuti selezionati, oppure lo hai già messo nel carrello</p>";
               }
                ?>
             </div>

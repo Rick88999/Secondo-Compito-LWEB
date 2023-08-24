@@ -4,7 +4,7 @@ $error='';
 $db_name='HillDownGameStore_db';
 $users_table='user_table';
 $info_user_table='info_user_table';
-$add_on_table='games_table';
+$add_on_table='games_table';                           //Nomi dele varie tabelle, il profilo che ho utilizzato possiede tutti i privilegi e, come chiamato sugli esempi, prende il nome:'archer' password:'archer'
 $users_game_list='users_game_list';
 $active_cart_table='active_cart';
 
@@ -29,7 +29,7 @@ if (mysqli_connect_errno()) {
     printf("Errore di connessione: %s\n", mysqli_connect_error());
     exit();
 }
-
+//Tabella le cui tuple sono i vari account sulla piattaforma
 $query="CREATE TABLE IF not exists $users_table(
   id INT NOT NULL auto_increment,
   email VARCHAR(40),
@@ -42,7 +42,9 @@ $query="CREATE TABLE IF not exists $users_table(
 if(!($res=mysqli_query($sqlConnect, $query))){
   $error.="ERROR2: USER TABLE CREATION ERROR!";
 }
-
+/*Nel mio progetto ho deciso di separare la tabella degli utenti da quelle delle info relativa ad essi. Le indormazioni type_game_played, game_played e rank_lv
+le immagino come informazioni attue ad una continua ricerca di merca su ogni utente che si iscrive. Questo sarà utile all'azienda per integrare o sviluppare nuovi giochi
+secondo le preferenze del nuovo pubblico*/
 $query="CREATE TABLE IF not exists $info_user_table(
   id INT NOT NULL,
   citta VARCHAR(40),
@@ -58,6 +60,7 @@ $query="CREATE TABLE IF not exists $info_user_table(
 if(!($res=mysqli_query($sqlConnect, $query))){
   $error.="ERROR2: INFO USER TABLE CREATION ERROR!";
 }
+//La tabella add_on_table tiene traccia nelle tupl di ogni gioco disponibile sulla piattaforma
 $query="CREATE TABLE IF not exists $add_on_table(
   id_prodotto INT NOT NULL auto_increment PRIMARY KEY,
   titolo VARCHAR(50),
@@ -70,7 +73,7 @@ $query="CREATE TABLE IF not exists $add_on_table(
 if(!($res=mysqli_query($sqlConnect, $query))){
   $error.="ERROR3: GAMES TABLE CREATION ERROR!";
 }
-
+//Questa tabella (users_game_table) tiene traccia al suo interno di tutti i gichi possediti da i vari account
 $query="CREATE TABLE IF not exists $users_game_list(
   id_user INT NOT NULL,
   id_game INT NOT NULL,
@@ -82,7 +85,7 @@ $query="CREATE TABLE IF not exists $users_game_list(
 if(!($res=mysqli_query($sqlConnect, $query))){
   $error.="ERROR4: GAME LIST USER TABLE CREATION ERROR!";
 }
-
+//actve_cart è la tabella che tiene traccia di ogni elemento presente nel carrello di un determinato utente. I carrelli sono sempre attivi, e per non usare coockie che ne tengono traccia ho usato un apposita tabella
 $query="CREATE TABLE IF not exists $active_cart_table(
   id_user INT NOT NULL,
   id_prodotto INT NOT NULL,
@@ -139,7 +142,7 @@ $query="INSERT INTO $add_on_table (titolo, img, prezzo, versione, descrizione) V
 if(!($res=mysqli_query($sqlConnect, $query))){
   $error.="ERROR7: INSERT GAME ERROR!";
 }
-
+/*I DLC differiscono da i giochi di riferimento, la mancanza di una bio e di una immagine di riferimento li rendono degli effettivi sottotipi che verrano gestti opportunamente con l'instruzione 'LIKE' nelle query*/
 $query="INSERT INTO $add_on_table (titolo, img, prezzo, versione, descrizione) VALUES (\"DLC(Sunlight3: the moon):Saturn day nights dreams\", \"none\",\"14.99\", \"0.1\", \"none\"); ";
 if(!($res=mysqli_query($sqlConnect, $query))){
   $error.="ERROR7: INSERT GAME ERROR!";

@@ -1,4 +1,8 @@
 <?php
+/*Il campo profilo mostra in base alle tabelle user_table e info_user_table le informazioni modificabili dell'utente. Nel progetto
+ho differenziato la tabella user da quella info_user per non andare a creare tabelle con troppi campi.
+In seguito sfrutto il JOIN per mettere insieme le due tabelle e stampare i vari campi all'interno delle caselle di testo
+per rendreli modificabili */
 session_name('HillDownService');
 session_start();
 
@@ -6,6 +10,7 @@ $db_name='HillDownGameStore_db';
 $users_table='user_table';
 $info_user_table='info_user_table';
 
+//
 $mod_field_user= array('email', 'password', 'nickname');
 $mod_field_info= array('citta', 'via', 'cap');
 
@@ -23,15 +28,16 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
         session_destroy();
         header('Location: login.php');
       }
-      elseif ($_POST['send']=='Invio') {
+      elseif ($_POST['send']=='Invio') {//Imetto le modifiche
+        /*Le modifiche saranno tali solo se il campo presente in quello degli array mod_field_user e mod_field_info é presente anche nel POST*/
         foreach ($mod_field_user as $k) {
-          if(isset($_POST[$k])){
+          if(isset($_POST[$k])){ //Se il relativo campo esiste in POST, aggiorno la tabella users nella relativa colonna del campo da modificare
             $query="UPDATE {$users_table} SET {$k}=\"{$_POST[$k]}\" WHERE id=\"{$_SESSION['id']}\";";
             $return=mysqli_query($sqlConnect, $query);
           }
         }
         foreach ($mod_field_info as $k) {
-          if(isset($_POST[$k])){
+          if(isset($_POST[$k])){//Se il relativo campo esiste in POST, aggiorno la tabella info_user nella relativa colonna del campo da modificare
             $query="UPDATE {$info_user_table} SET {$k}=\"{$_POST[$k]}\" WHERE id=\"{$_SESSION['id']}\";";
             $return=mysqli_query($sqlConnect, $query);
           }
@@ -42,12 +48,11 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
 
     }
 
-
-
-
+/*Effettuo la query che mi restituira la lista degli utenti con le loro relative informazioni*/
   $query="SELECT * FROM `{$users_table}` JOIN `{$info_user_table}` ON `{$users_table}`.id = `{$info_user_table}`.id WHERE `{$users_table}`.id= {$_SESSION['id']};";
   $return=mysqli_query($sqlConnect, $query);
   $sqlConnect->close();
+  $_SESSION['ttk']--;
 }
 else {
   $sqlConnect->close();
@@ -56,7 +61,7 @@ else {
   header('Location: login.php');
 }
 
-$_SESSION['ttk']--;
+
 
  ?>
 
@@ -66,7 +71,7 @@ $_SESSION['ttk']--;
  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <title>HillDown Game-Store</title>
+    <title>DownHill Game Store</title>
     <link rel="stylesheet" href="profile.css" media="screen">
     <link rel="stylesheet" href="Init_Struct__.css" media="screen">
   </head>
@@ -105,13 +110,15 @@ $_SESSION['ttk']--;
 
 
           <?php
+          /*Stampo per ogni utente l'email, la password, il nick name, la citta, la via e il CAP. Rendo modificambile ogni campo, in modo che ogni volta che aggiornerò la tupla le informazioni
+          saranno cambiate in base al nome del campo text, che sarà la key presente poi nel POST*/
           if($row=mysqli_fetch_array($return)){
 
             $string="<table>";
             $string.="<tr>";
             $string.="<td>";
             $string.="<label for=\"email\">Email";
-            $string.="<input type=\"text\" name=\"email\" value=\"{$row['email']}\">";
+            $string.="<input type=\"text\" name=\"email\" value=\"{$row['email']}\" readonly>"; //Ovviamente la mail non si può modificare dato che è chiave primaria
             $string.="</label>";
             $string.="</td>";
             $string.="<td>";

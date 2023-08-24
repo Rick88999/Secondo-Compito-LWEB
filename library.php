@@ -1,4 +1,5 @@
 <?php
+/*La pagina libreria presenta i giochi acquistati e a lato i propri DLC acquistati*/
 session_name('HillDownService');
 session_start();
 
@@ -21,17 +22,17 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
         header('Location: login.php');
       }
     }
-    if (isset($_GET['game'])) {
+    if (isset($_GET['game'])) { //Codice simile da StoreHomePage, infatti segue lo stesso principio e ci riporta lla gameList selezionando il codice del gioco che vogliamo visualizzare tramite bottone SEE
       $_SESSION['id_game']=$_GET['game'];
       $sqlConnect->close();
       header('Location: gameList.php');
 
 
     }
-
+/*La seguente query selezionera i giochi che l'utente possiede, ricavando tramite JOIN le info dalla tabella games_table (esclusi i soli DLC)*/
     $query="SELECT * FROM `{$users_game_list}` JOIN `{$add_on_table}` ON  `{$users_game_list}`.id_game=`{$add_on_table}`.id_prodotto WHERE  `{$users_game_list}`.id_user=\"{$_SESSION['id']}\" AND titolo NOT LIKE 'DLC%';";
     $return=mysqli_query($sqlConnect, $query);
-
+    $_SESSION['ttk']--;
   }
   else {
     $sqlConnect->close();
@@ -40,7 +41,7 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
     header('Location: login.php');
   }
 
-  $_SESSION['ttk']--;
+
 
  ?>
 
@@ -51,7 +52,7 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
  <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
    <head>
-     <title>HillDown Game-Store</title>
+     <title>DownHill Game Store</title>
      <link rel="stylesheet" href="StoreHomePage_.css" media="screen">
      <link rel="stylesheet" href="Init_Struct__.css" media="screen">
    </head>
@@ -89,10 +90,9 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
 
 
         <?php
+        //Si aggiunge una riga lla tabella per ogni gioco posseduto, se non si possiedono giochi la tabella non viene mostrata
         $flag=0;
         $struct="<table>";
-        $query="SELECT * FROM `{$add_on_table}` WHERE titolo NOT LIKE 'DLC%';";
-        $return_dlc=mysqli_query($sqlConnect, $query);
         while ($row=mysqli_fetch_array($return)) {
           $struct.="<tr>";
           $struct.="<td id=\"image\"><img src=\"{$row['img']}\" alt=\"{$row['titolo']}\"></td>";
@@ -102,6 +102,14 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
           $struct.="<td>";
           $struct.="<button type=\"submit\" name=\"game\" value=\"{$row['id_prodotto']}\">See</button>";
           $struct.="</td>";
+          /*Effettuo la query che mi darà tutti i DLC acquistati per singolo gioco*/
+          $query="SELECT titolo FROM`{$users_game_list}` JOIN `{$add_on_table}` ON  `{$users_game_list}`.id_game=`{$add_on_table}`.id_prodotto WHERE  `{$users_game_list}`.id_user=\"{$_SESSION['id']}\" AND titolo LIKE 'DLC({$row['titolo']})%';";
+          $dlc_check=mysqli_query($sqlConnect, $query);
+          $struct.="<td>";
+          while($dlc_row=mysqli_fetch_array($dlc_check)) {
+            $struct.="{$dlc_row['titolo']}"."<br>";
+          }
+          $struct.="</td>";
           $struct.="</tr>";
           $flag++;
         }
@@ -110,7 +118,7 @@ if (isset($_SESSION['ttk']) && $_SESSION['ttk']>0) {
           echo $struct;
           echo "</table>";
         }
-        $sqlConnect->close();
+        $sqlConnect->close(); //Solo dopo aver effettuato tutte le query che mi servono chiudo la connessione
          ?>
        </form>
        </div>

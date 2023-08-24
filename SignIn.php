@@ -1,5 +1,5 @@
 <?php
-
+/*La pagina di SignIn serve per l'appunto alla registrazione di nuovi utenti*/
 $db_name='HillDownGameStore_db';
 $users_table='user_table';
 $info_user_table='info_user_table';
@@ -10,38 +10,46 @@ $info_user_table='info_user_table';
       printf("Errore di connessione: %s\n", mysqli_connect_error());
       exit();
     }
-    $already=false;
+    $already1=false; //Le due variabili booleane servono a segnalare se si presenta la condizione (1) e/o la condizione (2) o nessuna delle due
+    $already2=false;
 
   if (isset($_POST['send'])) {
-    print_r($_POST);
     if($_POST['send']=='invio'){
+
+      /*
+      Contollo in seguito all'invio della form:
+      (1) Se l'email non é gia presente tra gli utenti dato che è chiave primaria insieme all'id;
+      (2)Controllo se i campi non sono vuoti
+      */
 
       $query="SELECT email FROM `{$users_table}` WHERE email=\"{$_POST['email']}\";";
       $return=mysqli_query($sqlConnect, $query);
-      if(!($row=mysqli_fetch_array($return))){
-        $query="INSERT INTO {$users_table} (email, nickname, password) VALUES (\"{$_POST['email']}\", \"{$_POST['nickname']}\", \"{$_POST['password']}\");";
-        $return1=mysqli_query($sqlConnect, $query);
+      if(!($row=mysqli_fetch_array($return))){     //(1)
+        if ($_POST['email']!="" && $_POST['nickname']!="" && $_POST['password']!="" && !(empty($_POST['type_game_played'])) && !(empty($_POST['game_played']))) { //(2)
+          $query="INSERT INTO {$users_table} (email, nickname, password) VALUES (\"{$_POST['email']}\", \"{$_POST['nickname']}\", \"{$_POST['password']}\");"; //Inserisco il nuovo utente nella tabella users_table, che gli assegnera un id
+          $return1=mysqli_query($sqlConnect, $query);
 
-        $typeGameString="";
-        $gameString="";
-        foreach ($_POST['type_game_played'] as $v) {
-          $typeGameString.=$v.":";
-        }
-        foreach ($_POST['game_played'] as $v) {
-          $gameString.=$v.":";
-        }
-        $query="SELECT id FROM `{$users_table}` WHERE email=\"{$_POST['email']}\";";
-        $return=mysqli_query($sqlConnect, $query);
-        if($row=mysqli_fetch_array($return)){
-          $query="INSERT INTO {$info_user_table} (id, citta, via, cap, type_game_played, game_played, rank_lv) VALUES (\"{$row['id']}\", \"{$_POST['citta']}\", \"{$_POST['via']}\", \"{$_POST['cap']}\", \"{$typeGameString}\", \"{$gameString}\",\"{$_POST['rank_lv']}\");";
-          $return2=mysqli_query($sqlConnect, $query);
-        }
+          $typeGameString="";
+          $gameString="";
+          foreach ($_POST['type_game_played'] as $v) {
+            $typeGameString.=$v.":";
+          }
+          foreach ($_POST['game_played'] as $v) {
+            $gameString.=$v.":";
+          }
+          $query="SELECT id FROM `{$users_table}` WHERE email=\"{$_POST['email']}\";"; //Ricavo l'id assegnatoli e lo associo alla tupla di info_user_table di referimento
+          $return=mysqli_query($sqlConnect, $query);
+          if($row=mysqli_fetch_array($return)){
+            $query="INSERT INTO {$info_user_table} (id, citta, via, cap, type_game_played, game_played, rank_lv) VALUES (\"{$row['id']}\", \"{$_POST['citta']}\", \"{$_POST['via']}\", \"{$_POST['cap']}\", \"{$typeGameString}\", \"{$gameString}\",\"{$_POST['rank_lv']}\");";
+            $return2=mysqli_query($sqlConnect, $query);
+          }
 
-
-        header('Location: login.php');
+          header('Location: login.php');
+        }
+        else $already2=true;
 
       }
-      else $already=true;
+      else $already1=true;
     }
     if ($_POST['send']=='back') {
       $sqlConnect->close();
@@ -61,14 +69,22 @@ $info_user_table='info_user_table';
  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
  <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <title>HillDown Game Store</title>
+    <title>DownHill Game Store</title>
     <link rel="stylesheet" href="Init_Struct__.css" media="screen">
-    <link rel="stylesheet" href="signIn.css" media="screen">
+    <link rel="stylesheet" href="signIn_.css" media="screen">
   </head>
   <body>
     <div class="flexContainer">
       <div class="table">
         <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+          <?php
+          if ($already1) {
+            echo "<p>Email già presente!</p>";
+          }
+          elseif ($already2) {
+            echo "<p>Completa tutti campi!</p>";
+          }
+           ?>
         <table>
           <tr>
             <td><input type="submit" name="send" value="back"></td>

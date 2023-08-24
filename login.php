@@ -13,21 +13,22 @@ if (mysqli_connect_errno()) {
 if(isset($_POST['send'])){
   if ($_POST['send']=='Login') {
     if(!(empty($_POST['email'])) && !(empty($_POST['password']))){
-      if(!(preg_match("/^.*@.*/", $_POST['email']))){
+      if(!(preg_match("/^.*@.*/", $_POST['email']))){                       //verifica che nel POST il campo send sia settato (E QUINDI SIA STATA ATTIVATA LA FORM, ALTRIMENTI LO SCRIPT NON VERRA ESEGUITO SI DALL'INIZIO),
+                                                                           //che il campo email e password siano compilati e che sia presente la @ nel campo email.
         $string.="<p>Inserire l'email non un nickname</p>";
       }
       else{
-        $query="SELECT * FROM `{$users_table}` WHERE email=\"{$_POST['email']}\" AND password=\"{$_POST['password']}\";";
+        $query="SELECT * FROM `{$users_table}` WHERE email=\"{$_POST['email']}\" AND password=\"{$_POST['password']}\";";    //Query per il match dell'utente con le credenziali fornite
         $return=mysqli_query($sqlConnect, $query);
         $row=mysqli_fetch_array($return);
 
-        if($row){
+        if($row){                            //In caso ahffermativo verra inizializzata la sessione
           session_name('HillDownService');
           session_start();
           $_SESSION['id']=$row['id'];
           $_SESSION['email']=$row['email'];
           $_SESSION['nickname']=$row['nickname'];
-          $_SESSION['ttk']=100;
+          $_SESSION['ttk']=100;     //TTK (Time To Kill) è la variabile che mi serve per dare un nuomero di reload limitati ad utente, dopo l'accesso l'utente potra navigare tra le varie pagine solo un centinaio di volte, per poi essere riportato qui
 
             header('Location: StoreHomePage.php');
           }
@@ -42,6 +43,7 @@ if(isset($_POST['send'])){
     }
   }
   elseif ($_POST['send']=='Sign In') {
+    /*Ho costruito un apposita pagina per il Sign In, molto semplificata si inetende (niente verifica email o AUTH a 2 fattori)*/
     header('Location: SignIn.php');
   }
 
@@ -58,9 +60,9 @@ if(isset($_POST['send'])){
  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <title>HillDown Game Store</title>
+    <title>DownHill Game Store</title>
     <link rel="stylesheet" href="Init_Struct__.css" media="screen">
-    <link rel="stylesheet" href="login_.css" media="screen">
+    <link rel="stylesheet" href="login__.css" media="screen">
   </head>
   <body>
     <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
